@@ -69,19 +69,27 @@ For more results on the ICCV VQualA 2025 FIQA Challenge, please refer to the cha
 
 ### Requirements
 
-- Python >= 3.9
-- PyTorch >= 1.13
-- CUDA >= 11.0 (for GPU training)
+- Python == 3.11.14
+- PyTorch == 2.4.1
+- CUDA-compatible NVIDIA driver (for GPU training; the locked PyTorch wheel includes CUDA 12.1 runtime packages)
 
 ### Environment Setup
 
 ```bash
-# Create and activate conda environment
-conda create -n EfficientFIQA python=3.9
-conda activate EfficientFIQA
+# Install the pinned Python interpreter and dependencies
+uv sync --frozen
+source .venv/bin/activate
+```
 
-# Install other dependencies
-pip install -r requirements.txt
+Run commands through the pinned uv environment:
+
+```bash
+uv run python test.py \
+--model_name FIQA_EdgeNeXt_XXS \
+--model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
+--image_file demo_images/z06399.png \
+--image_size 352 \
+--gpu_ids cpu
 ```
 
 ---
