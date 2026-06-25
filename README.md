@@ -185,11 +185,11 @@ python train_student_model.py
 ### Test on your images
 ```bash
 python test.py \
-    --model_name FIQA_EdgeNeXt_XXS \
-    --model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
-    --image_file your_image.jpg \
-    --image_size 352 \
-    --gpu_ids 0
+--model_name FIQA_EdgeNeXt_XXS \
+--model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
+--image_file your_image.jpg \
+--image_size 352 \
+--gpu_ids 0
 ```
 
 ### Usage Examples
@@ -197,28 +197,64 @@ python test.py \
 ```bash
 # Test with student model (recommended)
 python test.py \
-    --model_name FIQA_EdgeNeXt_XXS \
-    --model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
-    --image_file demo_images/z06399.png \
-    --image_size 352 \
-    --gpu_ids 0
+--model_name FIQA_EdgeNeXt_XXS \
+--model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
+--image_file demo_images/z06399.png \
+--image_size 352 \
+--gpu_ids 0
 
 # Test with teacher model
 python test.py \
-    --model_name FIQA_Swin_B \
-    --model_weights_file ckpts/Swin_B_plus_checkpoint.pt \
-    --image_file demo_images/z06399.png \
-    --image_size 448 \
-    --gpu_ids 0
+--model_name FIQA_Swin_B \
+--model_weights_file ckpts/Swin_B_plus_checkpoint.pt \
+--image_file demo_images/z06399.png \
+--image_size 448 \
+--gpu_ids 0
 
 # CPU inference
 python test.py \
-    --model_name FIQA_EdgeNeXt_XXS \
-    --model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
-    --image_file demo_images/z06399.png \
-    --image_size 352 \
-    --gpu_ids cpu
+--model_name FIQA_EdgeNeXt_XXS \
+--model_weights_file ckpts/EdgeNeXt_XXS_checkpoint.pt \
+--image_file demo_images/z06399.png \
+--image_size 352 \
+--gpu_ids cpu
 ```
+
+### ONNX Runtime Inference
+
+`demo.py` runs FIQA_EdgeNeXt_XXS ONNX models without importing PyTorch or TorchVision.
+
+```bash
+# Fixed 1x3x352x352 ONNX, CPU backend
+uv run python demo.py \
+--backend cpu \
+--onnx_file onnx/FIQA_EdgeNeXt_XXS_1x3x352x352.onnx \
+--image_file demo_images/z06399_368x488_0.3676.png
+
+# Dynamic H/W ONNX, CPU backend
+uv run python demo.py \
+--backend cpu \
+--onnx_file onnx/FIQA_EdgeNeXt_XXS_1x3xHxW.onnx \
+--image_file demo_images/z06399_368x488_0.3676.png \
+--height 320 \
+--width 384
+
+# CUDA backend (requires an ONNX Runtime build with CUDAExecutionProvider)
+uv run python demo.py \
+--backend cuda \
+--gpu_id 0 \
+--onnx_file onnx/FIQA_EdgeNeXt_XXS_1x3x352x352.onnx \
+--image_file demo_images/z06399_368x488_0.3676.png
+
+# TensorRT backend (requires TensorrtExecutionProvider)
+uv run python demo.py \
+--backend tensorrt \
+--gpu_id 0 \
+--onnx_file onnx/FIQA_EdgeNeXt_XXS_1x3x352x352.onnx \
+--image_file demo_images/z06399_368x488_0.3676.png
+```
+
+The default backend is `cuda`. If the requested ONNX Runtime execution provider is not available, `demo.py` exits with an explicit error instead of falling back to CPU.
 
 ### Command Line Options
 
@@ -229,6 +265,18 @@ python test.py \
 | `--image_size` | Input image size (352 for EdgeNeXt, 448 for Swin-B) | - |
 | `--image_file` | Path to input image | - |
 | `--gpu_ids` | GPU IDs or "cpu" | "0" |
+
+### ONNX Demo Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--onnx_file` | Path to ONNX model | `onnx/FIQA_EdgeNeXt_XXS_1x3x352x352.onnx` |
+| `--image_file` | Path to input image | `demo_images/z06399.png` |
+| `--backend` | ONNX Runtime backend (`cuda`, `cpu`, or `tensorrt`) | `cuda` |
+| `--image_size` | Default square input size | `352` |
+| `--height` | Input crop height for dynamic H/W ONNX | `image_size` |
+| `--width` | Input crop width for dynamic H/W ONNX | `image_size` |
+| `--gpu_id` | GPU device ID for CUDA or TensorRT backend | `0` |
 
 ---
 
