@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Efficient-FIQA TFLite Benchmark</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Efficient-FIQA TFLite Benchmark</h1>
+        <p>LiteRT.js benchmark for WebGPU and WASM backends.</p>
+      </header>
+
+      <section class="panel controls">
+        <label>
+          Backend
+          <select id="backend">
+            <option value="webgpu">webgpu</option>
+            <option value="wasm">wasm</option>
+          </select>
+        </label>
+
+        <label>
+          Model URL
+          <input id="modelUrl" type="text" value="/tflite/FIQA_EdgeNeXt_XXS_1x3x352x352_float32.tflite" />
+        </label>
+
+        <label>
+          Image URL
+          <input id="imageUrl" type="text" value="/demo_images/z06399_368x488_0.3676.png" />
+        </label>
+
+        <label>
+          Image size
+          <input id="imageSize" type="number" min="32" step="1" value="352" />
+        </label>
+
+        <label>
+          Warmup runs
+          <input id="warmupRuns" type="number" min="0" step="1" value="5" />
+        </label>
+
+        <label>
+          Benchmark runs
+          <input id="benchmarkRuns" type="number" min="1" step="1" value="50" />
+        </label>
+
+        <button id="runButton" type="button">Run benchmark</button>
+      </section>
+
+      <section class="results">
+        <div class="metric">
+          <span>Score</span>
+          <strong id="score">-</strong>
+        </div>
+        <div class="metric">
+          <span>Mean</span>
+          <strong id="mean">-</strong>
+        </div>
+        <div class="metric">
+          <span>Median</span>
+          <strong id="median">-</strong>
+        </div>
+        <div class="metric">
+          <span>Min / Max</span>
+          <strong id="minMax">-</strong>
+        </div>
+        <div class="metric">
+          <span>Accelerated</span>
+          <strong id="accelerated">-</strong>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Log</h2>
+        <pre id="log"></pre>
+      </section>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

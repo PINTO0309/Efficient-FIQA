@@ -256,6 +256,29 @@ uv run python demo.py \
 
 The default backend is `cuda`. If the requested ONNX Runtime execution provider is not available, `demo.py` exits with an explicit error instead of falling back to CPU.
 
+### TFLite Web Benchmark
+
+The browser benchmark runs `tflite/FIQA_EdgeNeXt_XXS_1x3x352x352_float32.tflite` with LiteRT.js. It supports `webgpu` and `wasm` backends.
+
+```bash
+npm install
+npm run bench:tflite
+```
+
+Open the Vite URL in a browser:
+
+```text
+https://localhost:5173/web/tflite_benchmark/
+```
+
+The page defaults to:
+
+```text
+/tflite/FIQA_EdgeNeXt_XXS_1x3x352x352_float32.tflite
+```
+
+WebGPU requires a browser with WebGPU support and a secure context. The local Vite server uses HTTPS with a development certificate, so the browser may ask you to accept the certificate first. Select `wasm` in the page to benchmark the WASM backend.
+
 ### Command Line Options
 
 | Option | Description | Default |
